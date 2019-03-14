@@ -1,0 +1,10 @@
+data <- read.table("~/Lista-vs-ABB/amostra.txt", header=T)
+options(scipen=5)
+maxY <- max(data$list)
+maxX <- max(data$size)
+minX <- min(data$size)
+minY <- min(data$list)
+plot(data$list~data$size, col="blue", xlab="Size", ylab="Comparisons", xlim=c(minX, maxX), ylim=c(minY, maxY))
+title(main = "Lista")
+legend("topleft", c("Lista"), col=c("blue"), pch=1, inset = c(0.05, 0.05)) 
+
