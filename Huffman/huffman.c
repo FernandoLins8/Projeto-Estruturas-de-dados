@@ -4,6 +4,34 @@
 
 #define MAX 256
 
+typedef struct node
+{
+	unsigned char value;
+	int priority;
+	int control;
+	struct node *next;
+	struct node *left;
+	struct node *right;
+} Node;
+
+typedef struct priority_queue
+{
+	Node *head;
+} Queue;
+
+typedef struct element
+{
+	int key;
+	unsigned char *byte;
+	int size;
+} Element;
+
+typedef struct hash_table
+{
+	Element *table[MAX];
+} Hash_table;
+
+
 int main(int argc, char const *argv[])
 {
 	if(argc != 2)
