@@ -21,7 +21,7 @@ typedef struct priority_queue
 
 typedef struct element
 {
-	int key;
+	int freq;
 	unsigned char *byte;
 	int size;
 } Element;
@@ -43,6 +43,7 @@ void print_tree(Node *tree);
 Hash_table* create_hash_table();
 int height(Node *node);
 void search(Hash_table *ht, Node* node, unsigned char *byte, int size);
+int get_tree_size(Node *node);
 
 
 int main(int argc, char const *argv[])
@@ -63,9 +64,15 @@ int main(int argc, char const *argv[])
 	fread(&ch, sizeof(ch), 1, input_file);
 	while(!feof(input_file))
 	{
-		freq[ch]++;
+		if(ch != 10)
+			freq[ch]++;
 		fread(&ch, sizeof(ch), 1, input_file);
 	}
+
+	/*for(i=0; i<MAX; i++)
+		if(freq[i])
+			printf("%c %d\n", i, freq[i]);
+	*/
 
 	Queue *pq = create_priority_queue();
 
@@ -96,6 +103,15 @@ int main(int argc, char const *argv[])
 
 	unsigned char *byte = malloc(sizeof(unsigned char)*height(pq->head)+1);
 	search(ht, pq->head, byte, 0);
+
+	/*Print Hash
+	for(i=0; i<MAX; i++)
+	{
+		if(ht->table[i])
+		{
+			printf("%c %d %s %d\n", i, ht->table[i]->freq, ht->table[i]->byte, ht->table[i]->size);
+		}
+	}*/
 
 	return 0;
 }
@@ -226,24 +242,20 @@ int height(Node *node)
 
 void search(Hash_table *ht, Node* node, unsigned char *byte, int size)
 {
-	printf("---- size ----%d\n", size);
 	if(node)
 	{
 		if(!node->left && !node->right)
 		{
-			printf("size = %d\n", size);
 			ht->table[node->value] = malloc(sizeof(Element));
 			unsigned char *new_byte = malloc(sizeof(unsigned char)*size);
 
 			byte[size] = '\0';
 			strcpy(new_byte, byte);
+			ht->table[node->value]->freq = node->priority;
 			ht->table[node->value]->byte = new_byte;
 			ht->table[node->value]->size = size;
 
-			printf("node = %c\n", node->value);
-			printf("bt = %c%c%c%c\n", byte[0], byte[1], byte[2], byte[3]);
-			printf("%s %d\n\n", ht->table[node->value]->byte, ht->table[node->value]->size);
-			size--;
+			//printf("%c %s\n", node->value, ht->table[node->value]->byte);
 		}
 		else
 		{
@@ -255,8 +267,5 @@ void search(Hash_table *ht, Node* node, unsigned char *byte, int size)
 			search(ht, node->right, byte, ++size);
 			size--;
 		}
-
 	}
-
-
 }
