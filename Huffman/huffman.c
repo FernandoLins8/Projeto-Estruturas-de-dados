@@ -44,6 +44,7 @@ Hash_table* create_hash_table();
 int height(Node *node);
 void search(Hash_table *ht, Node* node, unsigned char *byte, int size);
 int get_tree_size(Node *node);
+int get_data_size(Hash_table *ht);
 
 
 int main(int argc, char const *argv[])
@@ -112,6 +113,12 @@ int main(int argc, char const *argv[])
 			printf("%c %d %s %d\n", i, ht->table[i]->freq, ht->table[i]->byte, ht->table[i]->size);
 		}
 	}*/
+
+	int tree_size = get_tree_size(pq->head),
+	data_size = get_data_size(ht),
+	trash_size = (tree_size + data_size) % 8;
+
+	printf("tree_size = %d\ndata_size = %d\ntrash_size = %d\n", get_tree_size(pq->head), get_data_size(ht), trash_size);
 
 	return 0;
 }
@@ -268,4 +275,32 @@ void search(Hash_table *ht, Node* node, unsigned char *byte, int size)
 			size--;
 		}
 	}
+}
+
+int get_tree_size(Node *node)
+{
+	if(node)
+	{
+		return get_tree_size(node->left) + get_tree_size(node->right) + 1;
+	}
+	
+	return 0;
+}
+
+int get_data_size(Hash_table *ht)
+{
+	int i, total = 0;
+
+	for(i=0; i<MAX; i++)
+		if(ht->table[i])
+		{
+			total += (ht->table[i]->freq * ht->table[i]->size); 
+		}
+	return total;
+}
+
+unsigned char set_bit(unsigned char c, int i)
+{
+	unsigned char mask = 1 << i;
+	return mask | c;
 }
