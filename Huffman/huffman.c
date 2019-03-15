@@ -40,6 +40,10 @@ void print_queue(Queue *pq);
 Node* create_tree(Node *left, Node *right);
 void print_tree(Node *tree);
 
+Hash_table* create_hash_table();
+int height(Node *node);
+void search(Hash_table *ht, Node* node, unsigned char *byte, int size);
+
 
 int main(int argc, char const *argv[])
 {
@@ -87,6 +91,12 @@ int main(int argc, char const *argv[])
 	}
 
 	//print_tree(pq->head);
+
+	Hash_table *ht = create_hash_table();
+
+	unsigned char *byte = malloc(sizeof(unsigned char)*height(pq->head)+1);
+	search(ht, pq->head, byte, 0);
+
 	return 0;
 }
 
@@ -185,4 +195,68 @@ void print_tree(Node *tree)
 		print_tree(tree->left);
 		print_tree(tree->right);
 	}
+}
+
+Hash_table* create_hash_table()
+{
+	Hash_table *new = malloc(sizeof(Hash_table));
+
+	int i;
+	for(i=0; i<MAX; i++)
+		new->table[i] = NULL;
+
+	return new;
+}
+
+int height(Node *node)
+{
+	if(!node)
+		return 0;
+	else
+	{
+		int left_height = height(node->left),
+		right_height = height(node->right);
+
+		if(left_height > right_height)
+			return left_height+1;
+		else
+			return right_height+1;
+	}
+}
+
+void search(Hash_table *ht, Node* node, unsigned char *byte, int size)
+{
+	printf("---- size ----%d\n", size);
+	if(node)
+	{
+		if(!node->left && !node->right)
+		{
+			printf("size = %d\n", size);
+			ht->table[node->value] = malloc(sizeof(Element));
+			unsigned char *new_byte = malloc(sizeof(unsigned char)*size);
+
+			byte[size] = '\0';
+			strcpy(new_byte, byte);
+			ht->table[node->value]->byte = new_byte;
+			ht->table[node->value]->size = size;
+
+			printf("node = %c\n", node->value);
+			printf("bt = %c%c%c%c\n", byte[0], byte[1], byte[2], byte[3]);
+			printf("%s %d\n\n", ht->table[node->value]->byte, ht->table[node->value]->size);
+			size--;
+		}
+		else
+		{
+			byte[size] = '0';
+			search(ht, node->left, byte, ++size);
+			size--;
+
+			byte[size] = '1';
+			search(ht, node->right, byte, ++size);
+			size--;
+		}
+
+	}
+
+
 }
