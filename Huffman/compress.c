@@ -70,7 +70,6 @@ int main(int argc, char const *argv[])
 	fread(&ch, sizeof(ch), 1, input_file);
 	while(!feof(input_file))
 	{
-		//if(ch != 10)
 		freq[ch]++;
 		fread(&ch, sizeof(ch), 1, input_file);
 	}
@@ -165,23 +164,6 @@ Node* dequeue(Queue *pq)
 	}
 }
 
-void print_queue(Queue *pq)
-{
-	if(!pq->head)
-	{
-		printf("Empty queue\n");
-		return;
-	}
-
-	Node *n = pq->head;
-	while(n)
-	{
-		printf("%c,%d ", n->value, n->priority);
-		n = n->next;
-	}
-	printf("\n");
-}
-
 Node* create_tree(Node *left, Node *right)
 {
 	Node *new = malloc(sizeof(Node));
@@ -204,7 +186,6 @@ void write_tree(Node *node, FILE *output_file)
 			fwrite(&aux, 1, 1, output_file);
 		}
 		fwrite(&node->value, 1, 1, output_file);
-		//printf("%c ", node->value);
 		write_tree(node->left, output_file);
 		write_tree(node->right, output_file);
 	}
@@ -236,19 +217,6 @@ int height(Node *node)
 	}
 }
 
-/*void create_new_enc(Element *element)
-{
-	int i = element->size;
-	unsigned char new = 0;
-	while(i)
-	{
-		if(element->byte[i-1] == '1')
-			new = set_bit(new, element->size - i);
-		i--;
-	}
-	element->new_enc = new;
-}*/
-
 void search(Hash_table *ht, Node* node, unsigned char *byte, int size)
 {
 	if(node)
@@ -263,8 +231,6 @@ void search(Hash_table *ht, Node* node, unsigned char *byte, int size)
 			ht->table[node->value]->freq = node->priority;
 			ht->table[node->value]->byte = new_byte;
 			ht->table[node->value]->size = size;
-
-			//printf("%c %s %hu\n", node->value, ht->table[node->value]->byte, ht->table[node->value]->new_enc);
 		}
 		else
 		{
@@ -318,16 +284,12 @@ void two_first_bytes(FILE *output_file, int data_size, int tree_size)
 	unsigned char trash_size, first_byte, second_byte, complete_first;
 
 	trash_size = 8 - ((data_size % 8) % 8);
-	//printf("lixo - %d\n", trash_size);
 	trash_size = trash_size << 5;
 
 	complete_first = tree_size >> 8;
 
 	first_byte = trash_size | complete_first;
 	second_byte = tree_size;
-
-	//printf("%hu\n", first_byte);
-	//printf("%hu\n", second_byte);
 
 	fwrite(&first_byte, 1, 1, output_file);
 	fwrite(&second_byte, 1, 1, output_file);
@@ -340,8 +302,6 @@ void compress(FILE *input_file, Hash_table *ht, Node* tree)
 
 	unsigned short tree_size = get_tree_size(tree),
 	data_size = get_data_size(ht);
-
-	//printf("tree size = %hu\n", tree_size);
 
 	two_first_bytes(output_file, data_size, tree_size);
 	write_tree(tree, output_file);
@@ -357,34 +317,26 @@ void compress(FILE *input_file, Hash_table *ht, Node* tree)
 	{
 		if(ht->table[ch]->size + byte_size < 8)
 		{
-			//printf("MENOR\n");
 			strcat(byte, ht->table[ch]->byte);
-			//printf("CONC %s << %s\n\n", byte, ht->table[ch]->byte);
 			byte_size += ht->table[ch]->size;
 		}
 		else if(ht->table[ch]->size + byte_size == 8)
 		{
-			//printf("IGUAL\n");
 			strcat(byte, ht->table[ch]->byte);
-			//printf("byte %s << %s\n\n", byte, ht->table[ch]->byte);
 			write_byte(output_file, byte);
 			byte[0] = '\0';
 			byte_size = 0;
 		}
 		else
 		{
-			//printf("MAIOR\n");
 			unsigned char *aux_byte = malloc(sizeof(unsigned char)*ht->table[ch]->size);
 			strcpy(aux_byte, ht->table[ch]->byte);
-			//printf("%s << cpy %s\n", aux_byte, ht->table[ch]->byte);
-			//printf("byte = %s\n", byte);
 			for(i=0; i < ht->table[ch]->size; i++)
 			{
 				byte[byte_size] = aux_byte[i];
 				byte_size++;
 				if(byte_size == 8)
 				{
-					//printf("put %s\n", byte);
 					write_byte(output_file, byte);
 					byte_size = 0;
 					byte[0] = '\0';
@@ -397,7 +349,6 @@ void compress(FILE *input_file, Hash_table *ht, Node* tree)
 	if(data_size % 8)
 	{
 		write_byte(output_file, byte);
-		//printf("put %s\n", byte);
 	}
 }
 
@@ -413,6 +364,5 @@ void write_byte(FILE *output_file, unsigned char *str)
 		if(str[i] == '1')
 			byte = set_bit(byte, 7 - i);
 	}
-	//printf("%d\n", byte);
 	fwrite(&byte, 1, 1, output_file);
 }
