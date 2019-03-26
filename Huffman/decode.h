@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "huff_tree.h"
 
 Node* construct_tree_from_preorder(FILE* file, int tree_size){ 
 
@@ -64,7 +63,7 @@ void decompress(Node* node, FILE* file, FILE* output_file, long int size_file, i
 	}
 }
 
-void decode(char const *input_name[], char const *output_name[]){
+void decode(char const *input_name, char const *output_name){
 
 	unsigned char ch;
 	unsigned char temp = 0;

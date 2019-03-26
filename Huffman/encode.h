@@ -22,10 +22,10 @@ int get_data_size(Hash_table *ht);
 
 unsigned char set_bit(unsigned char c, int i);
 
-void compress(FILE *input_file, Hash_table *ht, Node* tree);
+void compress(FILE *input_file, FILE *output_file, Hash_table *ht, Node* tree);
 void write_byte(FILE *output_file, unsigned char *str);
 
-void encode(char const *input_name[], char const *output_name[])
+void encode(char const *input_name, char const *output_name)
 {
 
 	FILE *input_file;
@@ -72,9 +72,7 @@ void encode(char const *input_name[], char const *output_name[])
 	unsigned char *byte = malloc(sizeof(unsigned char)*height(pq->head));
 	search(ht, pq->head, byte, 0);
 
-	compress(input_file, ht, pq->head);
-
-	return 0;
+	compress(input_file, output_file, ht, pq->head);
 }
 
 void write_tree(Node *node, FILE *output_file)
