@@ -5,25 +5,6 @@
 #include "priority_queue.h"
 #include "hash_table.h"
 
-Node* create_node(unsigned char value, int priority, Node *next, Node *left, Node *right);
-Queue* create_priority_queue();
-void enqueue(Queue *pq, Node *node);
-Node* dequeue(Queue *pq);
-void print_queue(Queue *pq);
-Node* create_tree(Node *left, Node *right);
-void write_tree(Node *node, FILE *output_file);
-
-Hash_table* create_hash_table();
-void create_new_enc(Element *element);
-int height(Node *node);
-void search(Hash_table *ht, Node* node, unsigned char *byte, int size);
-int get_tree_size(Node *node);
-int get_data_size(Hash_table *ht);
-
-unsigned char set_bit(unsigned char c, int i);
-
-void compress(FILE *input_file, FILE *output_file, Hash_table *ht, Node* tree);
-void write_byte(FILE *output_file, unsigned char *str);
 
 void encode(char const *input_name, char const *output_name)
 {
