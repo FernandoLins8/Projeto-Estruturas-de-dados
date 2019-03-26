@@ -4,8 +4,9 @@
 #include "encode.h"
 #include "decode.h"
 
-int main(int argc, char const *argv[]){
-	
+
+int main(int argc, char const *argv[])
+{
 	if(argc != 4)
 	{
 		printf("Invalid number of arguments\n");
@@ -15,7 +16,7 @@ int main(int argc, char const *argv[]){
 
 	if(strcmp(argv[1], "encode") == 0)
 	{
-		encode(argv[2], argv[3]);
+		pre_comp(argv[2], argv[3]);
 	}
 	else if(strcmp(argv[1], "decode") == 0)
 	{
