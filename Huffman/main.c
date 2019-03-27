@@ -14,11 +14,11 @@ int main(int argc, char const *argv[])
 		exit(1);
 	}
 
-	if(strcmp(argv[1], "encode") == 0)
+	if(strcmp(argv[1], "-c") == 0)
 	{
 		pre_comp(argv[2], argv[3]);
 	}
-	else if(strcmp(argv[1], "decode") == 0)
+	else if(strcmp(argv[1], "-d") == 0)
 	{
 		decode(argv[2], argv[3]);
 	}
