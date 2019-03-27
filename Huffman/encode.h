@@ -42,7 +42,7 @@ void two_first_bytes(FILE *output_file, int data_size, int tree_size)
 {
 	unsigned char trash_size, first_byte, second_byte, complete_first;
 
-	trash_size = 8 - ((data_size % 8) % 8);
+	trash_size = 8 - ((data_size) % 8);
 	trash_size = trash_size << 5;
 
 	complete_first = tree_size >> 8;
@@ -129,6 +129,7 @@ void compress(FILE *input_file, FILE *output_file, Hash_table *ht, Node* tree)
 				}
 			}
 			byte[byte_size] = '\0';
+			free(aux_byte);
 		}
 		fread(&ch, sizeof(ch), 1, input_file);
 	}

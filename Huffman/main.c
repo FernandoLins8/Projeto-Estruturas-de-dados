@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
 	if(argc != 4)
 	{
 		printf("Invalid number of arguments\n");
-		printf("Format: <encode/decode> <input file> <output file>\n");
+		printf("Format: <-c/-d> <input file> <output file>\n");
 		exit(1);
 	}
 
@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
 	}
 	else
 	{
-		printf("wrong command\n");
+		printf("Format: <-c/-d> <input file> <output file>\n");
 	}
 
 	return 0;

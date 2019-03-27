@@ -2,24 +2,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-Node* construct_tree_from_preorder(FILE* file, int tree_size){ 
-
+Node* construct_tree_from_preorder(FILE* file, int tree_size)
+{
 	unsigned char ch;
 
 	Node *temp;
 	
 	fread(&ch, sizeof(ch), 1, file);
   
-    if(0 > tree_size){ 
+    if(0 > tree_size) 
         return NULL;
-    } 
 
-    if(ch == 92){
+    if(ch == 92)
+    {
     	fread(&ch, sizeof(ch), 1, file);
     	temp = create_node(ch, 0, NULL, NULL, NULL);
-    }else{
+    }
+    else
+    {
     	temp = create_node(ch, 0, NULL, NULL, NULL);
-    	if(ch == 42){ 
+    	if(ch == 42)
+    	{ 
     		temp->left  = construct_tree_from_preorder(file, --tree_size); 
       		temp->right = construct_tree_from_preorder(file, --tree_size); 
     	}
@@ -28,7 +31,8 @@ Node* construct_tree_from_preorder(FILE* file, int tree_size){
     return temp; 
 }
 
-int is_bit_i_set(unsigned char c, int i){
+int is_bit_i_set(unsigned char c, int i)
+{
 	unsigned char mask = 1 << i;
 	return mask & c;
 }
@@ -39,23 +43,26 @@ void decompress(Node* node, FILE* file, FILE* output_file, long int size_file, i
 
 	Node* temp = node;
 
-	while(size_file){
+	while(size_file)
+	{
 		fread(&ch, sizeof(ch), 1, file);
-		if(size_file == 1){
+		if(size_file == 1)
+		{
 			final = trash_size;
 		}
-		for(i = 7; i >= final; --i){
-			if(is_bit_i_set(ch, i)){
+		for(i = 7; i >= final; --i)
+		{
+			if(is_bit_i_set(ch, i))
+			{
 				temp = temp->right;
-			}else{
+			}
+			else
+			{
 				temp = temp->left;
 			}
-			if(!temp->left){
-				if(temp->control){
-					fwrite(&temp->value, 1, 1, output_file);
-				}else{
-					fwrite(&temp->value, 1, 1, output_file);
-				}
+			if(!temp->left)
+			{
+				fwrite(&temp->value, 1, 1, output_file);
 				temp = node;
 			}
 		}
@@ -63,8 +70,8 @@ void decompress(Node* node, FILE* file, FILE* output_file, long int size_file, i
 	}
 }
 
-void decode(char const *input_name, char const *output_name){
-
+void decode(char const *input_name, char const *output_name)
+{
 	unsigned char ch;
 	unsigned char temp = 0;
 	unsigned int tree_size = 0;
